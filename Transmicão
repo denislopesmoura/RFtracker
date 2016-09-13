@@ -1,0 +1,42 @@
+// Programa: Comunicação com Modulo RF - Arduino
+// *envio e verificação de dados através de um botão.
+
+#include <VirtualWire.h> // Biblioteca uitilizada para a programação da comunicação RF
+
+const int ledPin = 9; // Define o pino do Led
+const int botaoPin = A0; //Define o pino do botão
+int botaoValor; // variável para verificar o estado do botão
+int estado = 0; // variavel para registrar o estado da led
+char Valor_Msg[4];
+
+void setup() {
+
+  Serial.begin(9600); 
+  pinMode (ledPin, OUTPUT);// Define o pino como saida
+  pinMode (botaoPin, INPUT);//Define o pino como entrada  
+  vw_setup (3000); // Velocidade de envio dos dados (Bits por seg)
+  vw_set_tx_pin(8); // pino de dados do transmisor
+  Serial.println("Acione o botao para testar a comunicaçao...");
+}
+
+void loop() {
+
+  botaoValor = digitalRead (botaoPin);//verifica o estado do botão
+
+  if (botaoValor == 0){
+
+    estado = !estado; //muda o estado do led
+    itoa(estado,Valor_Msg,10);// converte valor para envio
+    digitalWrite (ledPin, true);//liga o Led, indicando o inicio do envio de dados
+    vw_send((uint8_t *)Valor_Msg, strlen(Valor_Msg));//envio de dados
+
+    vw_wait_tx();// aguarda o termino do envio
+
+    digitalWrite(ledPin, false);// desliga o led, indicando termino da transmição
+    Serial.print("Estado de Transmicao: ");
+    Serial.println(Valor_Msg);
+    delay(500);
+    
+    
+   }
+}
