@@ -27,17 +27,19 @@ void loop() {
 
       for(i = 0; i < buflen; i++){
         
-        char_RF_recebido[i] = char(buf[i]);
+        char_RF_recebido[i] = char(buf[i]);//armazena os caracteres recebidos
         
         }
 
       char_RF_recebido[buflen] = '\0';
 
-      valor_recebido = atoi(char_RF_recebido);
+      valor_recebido = atoi(char_RF_recebido); //converte valor para intenger
 
+      //escreve no monitor serial o valor (Estado) recebido
       Serial.print("Recebido: ");
       Serial.print(valor_recebido);
 
+      //Altera o estado do led conforme o valor recebido
       if(valor_recebido == 1){
         
           digitalWrite(pinLed,true);
